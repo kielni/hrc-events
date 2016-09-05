@@ -48,10 +48,9 @@ var eventsMap = function() {
       this.setUpDateSlider();
     },
     setUpMap : function() {
-      map = L.Mapzen.map('map', {
-        scrollWheelZoom : false,
-        scene : L.Mapzen.HouseStyles.Refill
-      });
+      var ts = (new Date()).getTime();
+      L.mapbox.accessToken = 'pk.eyJ1Ijoia2llbG5pIiwiYSI6Iml4OVFJdDAifQ.mn5cmGyz5GZLhzbUNSCIxw';
+      map = L.mapbox.map('map', 'mapbox.light');
       // disable default state to preference user location:
       // map.fitBounds([[48,-123], [28,-70]]);
 
@@ -67,8 +66,8 @@ var eventsMap = function() {
         searchedLocation = [center.lat, center.lng];
         eventsApp.doEventSearch(center.lat, center.lng, miles/2);
       });
-      map.on("tangramloaded", function(event) {
-        console.log("tangramloaded");
+      map.on("load", function(event) {
+        console.log('load elapsed='+((new Date()).getTime() - ts));
         if (document.getElementById("zipcode")) {
           return;  // already loaded
         }
@@ -76,7 +75,7 @@ var eventsMap = function() {
         script.src = "js/zipcode.js";
         script.id = "zipcode";
         document.getElementsByTagName("head")[0].appendChild(script);
-      });      
+      });
     },
     setUpEventHandlers : function() {
       d3.select("#radius-select").on("change",function(){
