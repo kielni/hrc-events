@@ -50,7 +50,9 @@ var eventsMap = function() {
     setUpMap : function() {
       var ts = (new Date()).getTime();
       L.mapbox.accessToken = 'pk.eyJ1Ijoia2llbG5pIiwiYSI6Iml4OVFJdDAifQ.mn5cmGyz5GZLhzbUNSCIxw';
-      map = L.mapbox.map('map', 'mapbox.light');
+      var layer = L.mapbox.tileLayer('mapbox.light');
+      map = L.mapbox.map('map');
+      map.addLayer(layer);
       // disable default state to preference user location:
       // map.fitBounds([[48,-123], [28,-70]]);
 
@@ -65,6 +67,9 @@ var eventsMap = function() {
           center = map.getCenter();
         searchedLocation = [center.lat, center.lng];
         eventsApp.doEventSearch(center.lat, center.lng, miles/2);
+      });
+      layer.on("tileload", function(e) {
+        console.log('load elapsed='+((new Date()).getTime() - ts));
       });
       map.on("load", function(event) {
         console.log('load elapsed='+((new Date()).getTime() - ts));
